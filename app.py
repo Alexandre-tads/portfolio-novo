@@ -1,22 +1,22 @@
-
 from flask import Flask, render_template, redirect, request, flash
 from flask_mail import Mail, Message
-from config import email,senha
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = '123456'
+app.secret_key = '12345678'
 
 mail_settings = {
     "MAIL_SERVER": 'smtp.gmail.com',
     "MAIL_PORT": 465,
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": email,
-    "MAIL_PASSWORD": senha
+    "MAIL_USERNAME": os.getenv("EMAIL"),
+    "MAIL_PASSWORD": os.getenv("SENHA")
 }
 
 app.config.update(mail_settings)
-
 mail = Mail(app)
 
 class Contato:
@@ -25,9 +25,7 @@ class Contato:
         self.email = email
         self.mensagem = mensagem
 
-
-
-@app.route("/")
+@app.route('/')
 def index():
     return render_template('index.html')
 
@@ -43,18 +41,15 @@ def send():
         msg = Message(
             subject = f'{formContato.nome} te enviou uma mensagem no portfólio',
             sender = app.config.get("MAIL_USERNAME"),
-            recipients = ['alexandre1.tads@gmail.com', app.config.get("MAIL_USERNAME")],
+            recipients= ['alexandre1.tads@gmail.com', app.config.get("MAIL_USERNAME")],
             body = f'''
             
-            {formContato.nome}com e e-mail {formContato.email}, te enviou a seguinte mensagem:
-
-
+            {formContato.nome} com o e-mail {formContato.email}, te enviou a seguinte mensagem:
             {formContato.mensagem}
-            
             '''
         )
         mail.send(msg)
-        flash("Mensagem enviada com sucesso!")
+        flash('Mensagem enviada com sucesso!')
     return redirect('/')
 
 if __name__ == '__main__':
