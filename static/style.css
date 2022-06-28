@@ -286,6 +286,17 @@ i.menu-mobile {
     }
 }
 
+#btn-enviar-loader {
+    transform: translate3d(0, 100%, 0);
+}
+
+#alerta {
+    position: fixed;
+    z-index: 10;
+    top: 30px;
+    right: 30px;
+  }
+
 #footer {
     padding: 15px;
     color: #fff;
